@@ -24,8 +24,8 @@ public class cMenu {
     }
 
     // setter
-    public void setIdMenu(int idMenu) {this.idMenu = idMenu;}
-    public void setNamaMenu(String namaMenu) {this.namaMenu = namaMenu;}
+    public void setHargaMenu(double hargaMenu) {this.hargaMenu = hargaMenu;}
+    public void setStokMenu(int stokMenu) {this.stokMenu = stokMenu;}
 
     // getter
     public int getIdMenu() {return this.idMenu;}
@@ -34,5 +34,12 @@ public class cMenu {
     public double getHargaMenu() {return this.hargaMenu;}
     public int getStokMenu() {return this.stokMenu;}
 
-
+    //query
+    public void ToString() {
+        System.out.println("ID Menu : " + this.idMenu);
+        System.out.println("Nama Menu : " + this.namaMenu);
+        System.out.println("Kategori Menu : " + this.kategoriMenu);
+        System.out.println("Harga Menu : " + this.hargaMenu);
+        System.out.println("Stok Menu : " + this.stokMenu);
+    }
 }
