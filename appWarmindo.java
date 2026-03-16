@@ -2,6 +2,7 @@ package ProjectAkhir;
 
 public class appWarmindo {
     public static void main(String[] args) {
+        System.out.println("Selamat datang di Warmindo");
         //membuat objek pembeli
         cPelanggan pembeli = new cPelanggan();
         cPelanggan pembeli1 = new cPelanggan(1, "Hinggar Ramadhana");
