@@ -35,11 +35,7 @@ public class cMenu {
     public int getStokMenu() {return this.stokMenu;}
 
     //query
-    public void ToString() {
-        System.out.println("ID Menu : " + this.idMenu);
-        System.out.println("Nama Menu : " + this.namaMenu);
-        System.out.println("Kategori Menu : " + this.kategoriMenu);
-        System.out.println("Harga Menu : " + this.hargaMenu);
-        System.out.println("Stok Menu : " + this.stokMenu);
+    public String toString() {
+        return "ID Menu : " + this.idMenu + "\nNama Menu : " + this.namaMenu + "\nKategori Menu : " + this.kategoriMenu + "\nHarga Menu : " + this.hargaMenu + "\nStok Menu : " + this.stokMenu;
     }
 }
