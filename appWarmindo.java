@@ -16,7 +16,7 @@ public class appWarmindo {
         System.out.println("Silahkan masukkan data kasir terlebih dahulu..");
         System.out.print("ID Kasir : ");
         int id = input.nextInt();
-        input.nextLine(); // consume newline
+        input.nextLine();
         System.out.print("Nama Kasir : ");
         String nama = input.nextLine();
 
@@ -32,7 +32,7 @@ public class appWarmindo {
             System.out.println("4. Keluar");
             System.out.print("Pilih : ");
             int pilih = input.nextInt();
-            input.nextLine(); // consume newline
+            input.nextLine();
 
             switch (pilih) {
                 case 1:
