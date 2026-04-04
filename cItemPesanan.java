@@ -22,6 +22,7 @@ public class cItemPesanan {
     }
 
     public String toString() {
-        return menu.getNamaMenu() + " x" + jumlah + " = " + getSubtotal();
+        String extraInfo = menu.getExtraInfo();
+        return menu.getNamaMenu() + (extraInfo.isEmpty() ? "" : " (" + extraInfo + ")") + " x" + jumlah + " = " + getSubtotal();
     }
 }

@@ -20,7 +20,7 @@ public class cMenu {
         this.kategoriMenu = kategoriMenu;
         this.hargaMenu = hargaMenu;
         this.stokMenu = stokMenu;
-        System.out.println("Objek cMenu dengan nama " + this.namaMenu + " berhasil dibuat");
+        System.out.println("Objek Menu dengan nama " + this.namaMenu + " berhasil dibuat");
     }
 
     // setter
@@ -34,8 +34,18 @@ public class cMenu {
     public double getHargaMenu() {return this.hargaMenu;}
     public int getStokMenu() {return this.stokMenu;}
 
+    // extra info for subclass
+    public String getExtraInfo() {
+        return "";
+    }
+
     //query
     public String toString() {
-        return "ID Menu : " + this.idMenu + "\nNama Menu : " + this.namaMenu + "\nKategori Menu : " + this.kategoriMenu + "\nHarga Menu : " + this.hargaMenu + "\nStok Menu : " + this.stokMenu;
+        String result = "ID Menu : " + this.idMenu + "\nNama Menu : " + this.namaMenu + "\nKategori Menu : " + this.kategoriMenu + "\nHarga Menu : " + this.hargaMenu + "\nStok Menu : " + this.stokMenu;
+        String extra = getExtraInfo();
+        if (!extra.isEmpty()) {
+            result += "\n" + extra;
+        }
+        return result;
     }
 }

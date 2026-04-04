@@ -14,7 +14,7 @@ public class cPelanggan {
     public cPelanggan(int id, String nama) {
         this.id = id;
         this.nama = nama;
-        System.out.println("objek cPembeli dengan nama " + this.nama + " berhasil dibuat");
+        System.out.println("objek Pembeli dengan nama " + this.nama + " berhasil dibuat");
     }
 
     //setter

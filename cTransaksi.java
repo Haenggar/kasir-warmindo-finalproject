@@ -18,7 +18,7 @@ public class cTransaksi {
         this.pesanan = pesanan;
         this.totalHarga = totalHarga;
         this.tanggalTransaksi = tanggalTransaksi;
-        System.out.println("Objek cTransaksi dengan ID " + this.idTransaksi + " berhasil dibuat");
+        System.out.println("Objek Transaksi dengan ID " + this.idTransaksi + " berhasil dibuat");
     }
 
     // getter

@@ -9,19 +9,47 @@ public class appWarmindo {
         Scanner input = new Scanner(System.in);
         ArrayList<cMenu> daftarMenu = new ArrayList<>();
         ArrayList<cTransaksi> daftarTransaksi = new ArrayList<>();
+        ArrayList<ckasir> daftarKasir = new ArrayList<>();
         int idPesananCounter = 1;
         int idTransaksiCounter = 1;
+        int idPelangganCounter = 0;
+        int idMenuCounter = 2;
+
+        // Inisialisasi daftar kasir
+        daftarKasir.add(new ckasir(1, "Agus", "1234"));
+        daftarKasir.add(new ckasir(2, "Eko", "1234"));
+        daftarKasir.add(new ckasir(3, "Moniq", "1234"));
+
+        // Inisialisasi daftar menu
+        daftarMenu.add(new cMenuMakanan(1, "Indomie Goreng", 5000, 10, "Sedang"));
+        daftarMenu.add(new cMenuMinuman(2, "Es Teh Manis", 3000, 20, true));
+        daftarMenu.add(new cMenuMinuman(3, "Teh Hangat", 3000, 20, false));
 
         System.out.println("Selamat datang di Program Kasir Warmindo");
-        System.out.println("Silahkan masukkan data kasir terlebih dahulu..");
-        System.out.print("ID Kasir : ");
-        int id = input.nextInt();
-        input.nextLine();
-        System.out.print("Nama Kasir : ");
-        String nama = input.nextLine();
+        System.out.println("Silahkan login sebagai kasir..");
 
-        ckasir kasir1 = new ckasir(id, nama);
-        System.out.println("\nSelamat datang " + kasir1.getNama() + " di Program Kasir Warmindo..");
+        ckasir kasirLoggedIn = null;
+        boolean loggedIn = false;
+        while (loggedIn == false) {
+            System.out.print("ID Kasir : ");
+            int id = input.nextInt();
+            input.nextLine();
+            System.out.print("Password : ");
+            String password = input.nextLine();
+
+            for (int i = 0; i < daftarKasir.size(); i++) {
+                if (daftarKasir.get(i).getId() == id && daftarKasir.get(i).getPassword().equals(password)) {
+                    kasirLoggedIn = daftarKasir.get(i);
+                    loggedIn = true;
+                    break;
+                }
+            }
+            if (loggedIn == false) {
+                System.out.println("ID atau password salah. Coba lagi.");
+            }
+        }
+
+        System.out.println("\nSelamat datang " + kasirLoggedIn.getNama() + " di Program Kasir Warmindo..");
 
         boolean running = true;
         while (running) {
@@ -38,14 +66,13 @@ public class appWarmindo {
                 case 1:
                     // Buat Pesanan
                     System.out.println("\n--- BUAT PESANAN ---");
-                    System.out.print("ID Pelanggan : ");
-                    int idPelanggan = input.nextInt();
-                    input.nextLine();
+                    int idPelanggan = idPelangganCounter++;
+                    System.out.println("ID Pelanggan : " + idPelanggan);
                     System.out.print("Nama Pelanggan : ");
                     String namaPelanggan = input.nextLine();
                     cPelanggan pelanggan = new cPelanggan(idPelanggan, namaPelanggan);
 
-                    cPesanan pesanan = new cPesanan(idPesananCounter++, pelanggan, kasir1);
+                    cPesanan pesanan = new cPesanan(idPesananCounter++, pelanggan, kasirLoggedIn);
 
                     boolean tambahItem = true;
                     while (tambahItem) {
@@ -54,8 +81,11 @@ public class appWarmindo {
                             System.out.println("Menu masih kosong. Tambahkan menu terlebih dahulu.");
                             break;
                         }
+                        System.out.printf("%-3s %-20s %-10s %-7s %-15s%n", "No", "Nama", "Harga", "Stok", "Info");
+                        System.out.println("--- -------------------- ---------- ------- ---------------");
                         for (int i = 0; i < daftarMenu.size(); i++) {
-                            System.out.println((i+1) + ". " + daftarMenu.get(i).getNamaMenu() + " - Rp" + daftarMenu.get(i).getHargaMenu() + " (Stok: " + daftarMenu.get(i).getStokMenu() + ")");
+                            cMenu m = daftarMenu.get(i);
+                            System.out.printf("%-3d %-20s Rp%-8.0f %-7d %-15s%n", i + 1, m.getNamaMenu(), m.getHargaMenu(), m.getStokMenu(), m.getExtraInfo());
                         }
                         System.out.print("Pilih nomor menu : ");
                         int pilihMenu = input.nextInt() - 1;
@@ -116,19 +146,29 @@ public class appWarmindo {
                         switch (pilihMenuKelola) {
                             case 1:
                                 System.out.println("Masukkan data menu baru");
-                                System.out.print("ID Menu : ");
-                                int idMenu = input.nextInt();
+                                int idMenu = idMenuCounter++;
+                                System.out.println("ID Menu : " + idMenu);
+                                System.out.print("Jenis Menu (1=Makanan, 2=Minuman) : ");
+                                int jenisMenu = input.nextInt();
                                 input.nextLine();
                                 System.out.print("Nama Menu : ");
                                 String namaMenu = input.nextLine();
-                                System.out.print("Kategori Menu : ");
-                                String kategoriMenu = input.nextLine();
                                 System.out.print("Harga Menu : ");
                                 double hargaMenu = input.nextDouble();
                                 System.out.print("Stok Menu : ");
                                 int stokMenu = input.nextInt();
                                 input.nextLine();
-                                cMenu menuBaru = new cMenu(idMenu, namaMenu, kategoriMenu, hargaMenu, stokMenu);
+                                cMenu menuBaru;
+                                if (jenisMenu == 1) {
+                                    System.out.print("Level Pedas : ");
+                                    String levelPedas = input.nextLine();
+                                    menuBaru = new cMenuMakanan(idMenu, namaMenu, hargaMenu, stokMenu, levelPedas);
+                                } else {
+                                    System.out.print("Dingin? (Y/N) : ");
+                                    String dinginInput = input.nextLine();
+                                    boolean dingin = dinginInput.equalsIgnoreCase("Y");
+                                    menuBaru = new cMenuMinuman(idMenu, namaMenu, hargaMenu, stokMenu, dingin);
+                                }
                                 daftarMenu.add(menuBaru);
                                 System.out.println("Menu berhasil ditambahkan.");
                                 break;
@@ -137,9 +177,11 @@ public class appWarmindo {
                                 if (daftarMenu.isEmpty()) {
                                     System.out.println("Menu masih kosong.");
                                 } else {
-                                    for (cMenu m : daftarMenu) {
-                                        System.out.println(m.toString());
-                                        System.out.println("---");
+                                    System.out.printf("%-2s | %-15s | %-10s | %-7s | %-4s | %-12s%n", "ID", "Nama", "Jenis", "Harga", "Stok", "Info");
+                                    System.out.println("---+-----------------+------------+---------+------+--------------");
+                                    for (int i = 0; i < daftarMenu.size(); i++) {
+                                        cMenu m = daftarMenu.get(i);
+                                        System.out.printf("%-2d | %-15s | %-10s | Rp%-5.0f | %-4d | %-12s%n", m.getIdMenu(), m.getNamaMenu(), m.getKategoriMenu(), m.getHargaMenu(), m.getStokMenu(), m.getExtraInfo());
                                     }
                                 }
                                 break;
@@ -204,9 +246,11 @@ public class appWarmindo {
                     if (daftarTransaksi.isEmpty()) {
                         System.out.println("Belum ada transaksi.");
                     } else {
-                        for (cTransaksi t : daftarTransaksi) {
-                            System.out.println(t.toString());
-                            System.out.println("---");
+                        System.out.printf("%-4s | %-10s | %-8s | %-8s | %-12s%n", "ID", "Kasir", "Total", "Jumlah", "Tanggal");
+                        System.out.println("----+------------+----------+----------+--------------");
+                        for (int i = 0; i < daftarTransaksi.size(); i++) {
+                            cTransaksi t = daftarTransaksi.get(i);
+                            System.out.printf("%-4d | %-10s | Rp%-7.0f | %-8d | %-12s%n", t.getIdTransaksi(), t.getPesanan().getKasir().getNama(), t.getTotalHarga(), t.getPesanan().getItems().size(), t.getTanggalTransaksi());
                         }
                     }
                     break;

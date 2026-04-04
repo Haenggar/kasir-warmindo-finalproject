@@ -11,7 +11,7 @@ public class cPesanan {
 
     // constructor
     public cPesanan() {
-        System.out.println("Constructor cPesanan dipanggil");
+        System.out.println("Constructor Pesanan dipanggil");
         items = new ArrayList<>();
     }
 
@@ -21,7 +21,7 @@ public class cPesanan {
         this.pembeli = pembeli;
         this.kasir = kasir;
         this.items = new ArrayList<>();
-        System.out.println("Objek cPesanan dengan ID " + this.idPesanan + " berhasil dibuat");
+        System.out.println("Objek Pesanan dengan ID " + this.idPesanan + " berhasil dibuat");
     }
 
     // getter
@@ -42,22 +42,21 @@ public class cPesanan {
 
     public double getTotal() {
         double total = 0;
-        for (cItemPesanan item : items) {
-            total += item.getSubtotal();
+        for (int i = 0; i < items.size(); i++) {
+            total += items.get(i).getSubtotal();
         }
         return total;
     }
 
     // toString
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ID Pesanan: ").append(this.idPesanan).append("\n");
-        sb.append("Pembeli: ").append(this.pembeli.getNama()).append("\n");
-        sb.append("Items:\n");
-        for (cItemPesanan item : items) {
-            sb.append("- ").append(item.toString()).append("\n");
+        System.out.println("ID Pesanan: " + this.idPesanan);
+        System.out.println("Pembeli: " + this.pembeli.getNama());
+        System.out.println("Items:");
+        for ( int i = 0; i < items.size(); i++) {
+            System.out.println("- " + items.get(i).toString());
         }
-        sb.append("Total: ").append(this.getTotal());
-        return sb.toString();
+        System.out.println("Total: " + this.getTotal());
+        return "";
     }
 }
