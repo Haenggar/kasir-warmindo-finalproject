@@ -1,23 +1,23 @@
 package ProjectAkhir;
 
 public class cMenuMinuman extends cMenu {
-    private boolean dingin;
+    private String gula;
 
-    public cMenuMinuman(int idMenu, String namaMenu, double hargaMenu, int stokMenu, boolean dingin) {
+    public cMenuMinuman(int idMenu, String namaMenu, double hargaMenu, int stokMenu, String gula) {
         super(idMenu, namaMenu, "Minuman", hargaMenu, stokMenu);
-        this.dingin = dingin;
+        this.gula = gula;
     }
 
-    public boolean isDingin() {
-        return this.dingin;
+    public String getGula() {
+        return gula;
     }
 
-    public void setDingin(boolean dingin) {
-        this.dingin = dingin;
+    public void setGula(String gula) {
+        this.gula = gula;
     }
 
     @Override
     public String getExtraInfo() {
-        return "Dingin : " + (this.dingin ? "Ya" : "Tidak");
+        return "Gula : " + this.gula;
     }
 }

@@ -12,7 +12,7 @@ public class appWarmindo {
         ArrayList<ckasir> daftarKasir = new ArrayList<>();
         int idPesananCounter = 1;
         int idTransaksiCounter = 1;
-        int idPelangganCounter = 0;
+        int idPelangganCounter = 1;
         int idMenuCounter = 2;
 
         // Inisialisasi daftar kasir
@@ -21,9 +21,8 @@ public class appWarmindo {
         daftarKasir.add(new ckasir(3, "Moniq", "1234"));
 
         // Inisialisasi daftar menu
-        daftarMenu.add(new cMenuMakanan(1, "Indomie Goreng", 5000, 10, "Sedang"));
-        daftarMenu.add(new cMenuMinuman(2, "Es Teh Manis", 3000, 20, true));
-        daftarMenu.add(new cMenuMinuman(3, "Teh Hangat", 3000, 20, false));
+        daftarMenu.add(new cMenuMakanan(1, "Mie Goreng", 5000, 10, "Null"));
+        daftarMenu.add(new cMenuMinuman(2, "Es Teh", 5000, 20, "Null"));
 
         System.out.println("Selamat datang di Program Kasir Warmindo");
         System.out.println("Silahkan login sebagai kasir..");
@@ -70,7 +69,10 @@ public class appWarmindo {
                     System.out.println("ID Pelanggan : " + idPelanggan);
                     System.out.print("Nama Pelanggan : ");
                     String namaPelanggan = input.nextLine();
-                    cPelanggan pelanggan = new cPelanggan(idPelanggan, namaPelanggan);
+                    System.out.print("Apakah pelanggan member? (Y/N) : ");
+                    String memberInput = input.nextLine();
+                    boolean isMember = memberInput.equalsIgnoreCase("Y");
+                    cPelanggan pelanggan = new cPelanggan(idPelanggan, namaPelanggan, isMember);
 
                     cPesanan pesanan = new cPesanan(idPesananCounter++, pelanggan, kasirLoggedIn);
 
@@ -81,34 +83,106 @@ public class appWarmindo {
                             System.out.println("Menu masih kosong. Tambahkan menu terlebih dahulu.");
                             break;
                         }
-                        System.out.printf("%-3s %-20s %-10s %-7s %-15s%n", "No", "Nama", "Harga", "Stok", "Info");
-                        System.out.println("--- -------------------- ---------- ------- ---------------");
-                        for (int i = 0; i < daftarMenu.size(); i++) {
-                            cMenu m = daftarMenu.get(i);
-                            System.out.printf("%-3d %-20s Rp%-8.0f %-7d %-15s%n", i + 1, m.getNamaMenu(), m.getHargaMenu(), m.getStokMenu(), m.getExtraInfo());
-                        }
-                        System.out.print("Pilih nomor menu : ");
-                        int pilihMenu = input.nextInt() - 1;
-                        if (pilihMenu < 0 || pilihMenu >= daftarMenu.size()) {
-                            System.out.println("Pilihan tidak valid.");
-                            continue;
-                        }
-                        cMenu menuDipilih = daftarMenu.get(pilihMenu);
-                        System.out.print("Jumlah pesanan : ");
-                        int jumlah = input.nextInt();
-                        input.nextLine(); // consume newline
-                        if (jumlah > menuDipilih.getStokMenu()) {
-                            System.out.println("Stok tidak cukup.");
-                            continue;
-                        }
-                        cItemPesanan item = new cItemPesanan(menuDipilih, jumlah);
-                        pesanan.addItem(item);
-                        menuDipilih.setStokMenu(menuDipilih.getStokMenu() - jumlah);
-
-                        System.out.print("Tambah item lagi? (Y/N) : ");
-                        String lagi = input.nextLine();
-                        if (!lagi.equalsIgnoreCase("Y")) {
-                            tambahItem = false;
+                        System.out.println("Makanan(1) / Minuman(2), selesai(0)");
+                        System.out.print("Pilih kategori menu : ");
+                        int pilihkategori = input.nextInt();
+                        input.nextLine();
+                        switch (pilihkategori) {
+                            case 0:
+                                tambahItem = false;
+                                break;
+                            case 1:
+                                System.out.println("Daftar Makanan:");
+                                for (int i = 0; i < daftarMenu.size(); i++) {
+                                    if (daftarMenu.get(i).getKategoriMenu().equalsIgnoreCase("Makanan")) {
+                                        cMenu m = daftarMenu.get(i);
+                                        System.out.printf("%-2d | %-15s | Rp%-5.0f | %-4d | %-12s%n", m.getIdMenu(), m.getNamaMenu(), m.getHargaMenu(), m.getStokMenu(), m.getExtraInfo());
+                                    }
+                                }
+                                System.out.print("Masukkan nama makanan yang ingin dipesan (atau ketik selesai untuk kembali): ");
+                                String namaMakanan = input.nextLine();
+                                if (namaMakanan.equalsIgnoreCase("selesai")) {
+                                    break;
+                                }
+                                cMenu menuMakanan = cariMenuByNama(daftarMenu, "Makanan", namaMakanan);
+                                if (menuMakanan == null) {
+                                    System.out.println("Menu makanan tidak ditemukan.");
+                                    break;
+                                }
+                                System.out.print("Masukkan jumlah pesanan : ");
+                                int jumlahMakanan = input.nextInt();
+                                input.nextLine();
+                                if (jumlahMakanan <= 0) {
+                                    System.out.println("Jumlah harus lebih dari 0.");
+                                    break;
+                                }
+                                if (jumlahMakanan > menuMakanan.getStokMenu()) {
+                                    System.out.println("Stok tidak cukup. Stok tersedia : " + menuMakanan.getStokMenu());
+                                    break;
+                                }
+                                System.out.println("1. Tidak Pedas \n2. Pedas \n3. Sangat Pedas");
+                                System.out.print("Masukkan level pedas : ");
+                                int pilihlevel = input.nextInt();
+                                input.nextLine();
+                                switch (pilihlevel) {
+                                    case 1:
+                                        System.out.println("Tidak Pedas");
+                                        cMenuMakanan makanan = (cMenuMakanan) menuMakanan;
+                                        makanan.setLevelPedas("Tidak Pedas");
+                                        break;
+                                    case 2:
+                                        System.out.println("Pedas");
+                                        cMenuMakanan makanan2 = (cMenuMakanan) menuMakanan;
+                                        makanan2.setLevelPedas("Pedas");
+                                        break;
+                                    case 3:
+                                        System.out.println("Sangat Pedas");
+                                        cMenuMakanan makanan3 = (cMenuMakanan) menuMakanan;
+                                        makanan3.setLevelPedas("Sangat Pedas");
+                                        break;
+                                    default:
+                                        System.out.println("Level pedas tidak valid. Default: Tidak Pedas.");
+                                        break;
+                                }
+                                cItemPesanan itemMakanan = new cItemPesanan(menuMakanan, jumlahMakanan);
+                                pesanan.addItem(itemMakanan);
+                                menuMakanan.setStokMenu(menuMakanan.getStokMenu() - jumlahMakanan);
+                                break;
+                            case 2:
+                                System.out.println("Daftar Minuman:");
+                                for (int i = 0; i < daftarMenu.size(); i++) {
+                                    if (daftarMenu.get(i).getKategoriMenu().equalsIgnoreCase("Minuman")) {
+                                        cMenu m = daftarMenu.get(i);
+                                        System.out.printf("%-2d | %-15s | Rp%-5.0f | %-4d | %-12s%n", m.getIdMenu(), m.getNamaMenu(), m.getHargaMenu(), m.getStokMenu(), m.getExtraInfo());
+                                    }
+                                }
+                                System.out.print("Masukkan nama minuman yang ingin dipesan (atau ketik selesai untuk kembali): ");
+                                String namaMinuman = input.nextLine();
+                                if (namaMinuman.equalsIgnoreCase("selesai")) {
+                                    break;
+                                }
+                                cMenu menuMinuman = cariMenuByNama(daftarMenu, "Minuman", namaMinuman);
+                                if (menuMinuman == null) {
+                                    System.out.println("Menu minuman tidak ditemukan.");
+                                    break;
+                                }
+                                System.out.print("Masukkan jumlah pesanan : ");
+                                int jumlahMinuman = input.nextInt();
+                                input.nextLine();
+                                if (jumlahMinuman <= 0) {
+                                    System.out.println("Jumlah harus lebih dari 0.");
+                                    break;
+                                }
+                                if (jumlahMinuman > menuMinuman.getStokMenu()) {
+                                    System.out.println("Stok tidak cukup. Stok tersedia : " + menuMinuman.getStokMenu());
+                                    break;
+                                }
+                                cItemPesanan itemMinuman = new cItemPesanan(menuMinuman, jumlahMinuman);
+                                pesanan.addItem(itemMinuman);
+                                menuMinuman.setStokMenu(menuMinuman.getStokMenu() - jumlahMinuman);
+                                break;
+                            default:
+                                System.out.println("Pilihan tidak valid.");
                         }
                     }
 
@@ -127,6 +201,23 @@ public class appWarmindo {
                     System.out.println("\n=== STRUK PEMBAYARAN ===");
                     System.out.println(transaksi.toString());
                     System.out.println("=========================");
+
+                    // Proses pembayaran
+                    double bayar = 0;
+                    while (true) {
+                        System.out.print("Masukkan jumlah bayar: ");
+                        bayar = input.nextDouble();
+                        input.nextLine();
+                        if (bayar < transaksi.getTotalSetelahDiskon()) {
+                            System.out.println("Jumlah bayar kurang. Total yang harus dibayar: Rp" + transaksi.getTotalSetelahDiskon());
+                        } else {
+                            break;
+                        }
+                    }
+                    double kembalian = bayar - transaksi.getTotalSetelahDiskon();
+                    transaksi.setStatusPembayaran("Lunas");
+                    System.out.println("Pembayaran berhasil. Kembalian: Rp" + kembalian);
+                    System.out.println("Status pembayaran: " + transaksi.getStatusPembayaran());
                     break;
 
                 case 2:
@@ -159,15 +250,18 @@ public class appWarmindo {
                                 int stokMenu = input.nextInt();
                                 input.nextLine();
                                 cMenu menuBaru;
-                                if (jenisMenu == 1) {
-                                    System.out.print("Level Pedas : ");
-                                    String levelPedas = input.nextLine();
-                                    menuBaru = new cMenuMakanan(idMenu, namaMenu, hargaMenu, stokMenu, levelPedas);
-                                } else {
-                                    System.out.print("Dingin? (Y/N) : ");
-                                    String dinginInput = input.nextLine();
-                                    boolean dingin = dinginInput.equalsIgnoreCase("Y");
-                                    menuBaru = new cMenuMinuman(idMenu, namaMenu, hargaMenu, stokMenu, dingin);
+                                switch (jenisMenu) {
+                                    case 1:
+                                        String levelPedas = "Null";
+                                        menuBaru = new cMenuMakanan(idMenu, namaMenu, hargaMenu, stokMenu, levelPedas);
+                                        break;
+                                    case 2:
+                                        String jenisGula = "Null";
+                                        menuBaru = new cMenuMinuman(idMenu, namaMenu, hargaMenu, stokMenu, jenisGula);
+                                        break;
+                                    default:
+                                        System.out.println("Jenis menu tidak valid.");
+                                        continue;
                                 }
                                 daftarMenu.add(menuBaru);
                                 System.out.println("Menu berhasil ditambahkan.");
@@ -246,11 +340,11 @@ public class appWarmindo {
                     if (daftarTransaksi.isEmpty()) {
                         System.out.println("Belum ada transaksi.");
                     } else {
-                        System.out.printf("%-4s | %-10s | %-8s | %-8s | %-12s%n", "ID", "Kasir", "Total", "Jumlah", "Tanggal");
-                        System.out.println("----+------------+----------+----------+--------------");
+                        System.out.printf("%-4s | %-10s | %-12s | %-8s | %-12s | %-10s%n", "ID", "Kasir", "Total Bayar", "Jumlah","Status",  "Tanggal");
+                        System.out.println("----+------------+--------------+----------+--------------+-----------");
                         for (int i = 0; i < daftarTransaksi.size(); i++) {
                             cTransaksi t = daftarTransaksi.get(i);
-                            System.out.printf("%-4d | %-10s | Rp%-7.0f | %-8d | %-12s%n", t.getIdTransaksi(), t.getPesanan().getKasir().getNama(), t.getTotalHarga(), t.getPesanan().getItems().size(), t.getTanggalTransaksi());
+                            System.out.printf("%-4d | %-10s | Rp%-11.0f | %-8d | %-12s | %-10s%n", t.getIdTransaksi(), t.getPesanan().getKasir().getNama(), t.getTotalSetelahDiskon(), t.getPesanan().getItems().size(), t.getStatusPembayaran(),  t.getTanggalTransaksi());
                         }
                     }
                     break;
@@ -265,5 +359,15 @@ public class appWarmindo {
             }
         }
         input.close();
+    }
+
+    private static cMenu cariMenuByNama(ArrayList<cMenu> daftarMenu, String kategori, String namaMenu) {
+        for (cMenu menu : daftarMenu) {
+            if (menu.getKategoriMenu().equalsIgnoreCase(kategori)
+                    && menu.getNamaMenu().equalsIgnoreCase(namaMenu)) {
+                return menu;
+            }
+        }
+        return null;
     }
 }
