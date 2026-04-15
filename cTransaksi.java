@@ -1,5 +1,7 @@
 package ProjectAkhir;
 
+import java.util.ArrayList;
+
 public class cTransaksi {
     //atribut transaksi
     private int idTransaksi;
@@ -46,6 +48,29 @@ public class cTransaksi {
     public void setTanggalTransaksi(String tanggalTransaksi) { this.tanggalTransaksi = tanggalTransaksi; }
     public void setStatusPembayaran(String statusPembayaran) { this.statusPembayaran = statusPembayaran; }
 
+    // method
+    public double prosesPembayaran(double jumlahBayar) {
+        if (jumlahBayar >= this.totalSetelahDiskon) {
+            this.statusPembayaran = "Lunas";
+            return jumlahBayar - this.totalSetelahDiskon; 
+        } else {
+            return -1; 
+        }
+    }
+
+    public static void tampilkanTransaksi(ArrayList<cTransaksi> daftarTransaksi) {
+        if (daftarTransaksi.isEmpty()) {
+            System.out.println("Belum ada transaksi.");
+        } else {
+            System.out.printf("%-4s | %-10s | %-12s | %-8s | %-12s | %-10s%n", "ID", "Kasir", "Total Bayar", "Jumlah","Status",  "Tanggal");
+            System.out.println("----+------------+--------------+----------+--------------+-----------");
+                for (int i = 0; i < daftarTransaksi.size(); i++) {
+                cTransaksi t = daftarTransaksi.get(i);
+                System.out.printf("%-4d | %-10s | Rp%-11.0f | %-8d | %-12s | %-10s%n", t.getIdTransaksi(), t.getPesanan().getKasir().getNama(), t.getTotalSetelahDiskon(), t.getPesanan().getItems().size(), t.getStatusPembayaran(),  t.getTanggalTransaksi());
+                }
+        }
+        
+    }
     // toString
     public String toString() {
         String result = "ID Transaksi: " + this.idTransaksi + "\nPesanan: " + this.pesanan.toString() + "\nTotal Harga: " + this.totalHarga;

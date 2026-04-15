@@ -40,12 +40,70 @@ public class cPesanan {
         items.add(item);
     }
 
+    public void tambahItem(cMenu menu, int jumlah) {
+        if (menu.getStokMenu() < jumlah) {
+            System.out.println("Stok " + menu.getNamaMenu() + " tidak cukup. Stok tersedia: " + menu.getStokMenu());
+            return;
+        }
+
+        if (jumlah <= 0) {
+            System.out.println("Jumlah harus lebih dari 0.");
+            return;
+        }
+
+        cItemPesanan item = new cItemPesanan(menu, jumlah);
+        addItem(item);
+        menu.kurangiStok(jumlah);
+
+        System.out.println("Berhasil menambahkan " + jumlah + " " + menu.getNamaMenu() + " ke keranjang.");
+    }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
     public double getTotal() {
         double total = 0;
         for (int i = 0; i < items.size(); i++) {
             total += items.get(i).getSubtotal();
         }
         return total;
+    }
+
+    public void hapusItem(int nomor) {
+        int indeks = nomor - 1; // Konversi ke indeks ArrayList (dimulai dari 0)
+        
+        if (indeks >= 0 && indeks < items.size()) {
+            cItemPesanan itemDihapus = items.get(indeks);
+            
+            // 1. Ambil informasi menu dan jumlah untuk mengembalikan stok
+            cMenu menu = itemDihapus.getMenu();
+            int jumlah = itemDihapus.getJumlah();
+            
+            // 2. Kembalikan stok menu (tambah kembali karena batal dipesan)
+            menu.setStokMenu(menu.getStokMenu() + jumlah);
+            
+            // 3. Hapus dari ArrayList
+            String namaMenu = menu.getNamaMenu();
+            items.remove(indeks);
+            
+            System.out.println("Berhasil menghapus " + namaMenu + " dari keranjang.");
+        } else {
+            System.out.println("Gagal menghapus: Nomor item tidak ditemukan.");
+        }
+    }
+
+    public void tampilkanKeranjang() {
+        if (items.isEmpty()) {
+            System.out.println("Keranjang masih kosong.");
+            return;
+        }
+        System.out.println("Isi keranjang sementara:");
+        for (int i = 0; i < items.size(); i++) {
+            cItemPesanan item = items.get(i);
+            System.out.printf("%d. %s x%d = Rp%.0f%n", i + 1, item.getMenu().getNamaMenu(), item.getJumlah(), item.getSubtotal());
+        }
+        System.out.println("Total sementara: Rp" + getTotal());
     }
 
     // toString
