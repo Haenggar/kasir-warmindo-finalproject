@@ -41,17 +41,24 @@ public class cPesanan {
     }
 
     public void tambahItem(cMenu menu, int jumlah) {
+        tambahItem(menu, jumlah, menu.getExtraInfo());
+    }
+
+    public void tambahItem(cMenu menu, int jumlah, String extraInfo) {
+        if (menu == null) {
+            System.out.println("Menu tidak ditemukan.");
+            return;
+        }
+        if (jumlah <= 0) {
+            System.out.println("Jumlah harus lebih dari 0.");
+            return;
+        }
         if (menu.getStokMenu() < jumlah) {
             System.out.println("Stok " + menu.getNamaMenu() + " tidak cukup. Stok tersedia: " + menu.getStokMenu());
             return;
         }
 
-        if (jumlah <= 0) {
-            System.out.println("Jumlah harus lebih dari 0.");
-            return;
-        }
-
-        cItemPesanan item = new cItemPesanan(menu, jumlah);
+        cItemPesanan item = new cItemPesanan(menu, jumlah, extraInfo);
         addItem(item);
         menu.kurangiStok(jumlah);
 

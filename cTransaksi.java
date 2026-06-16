@@ -1,6 +1,6 @@
 package ProjectAkhir;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class cTransaksi {
     //atribut transaksi
@@ -58,18 +58,16 @@ public class cTransaksi {
         }
     }
 
-    public static void tampilkanTransaksi(ArrayList<cTransaksi> daftarTransaksi) {
+    public static void tampilkanTransaksi(Collection<cTransaksi> daftarTransaksi) {
         if (daftarTransaksi.isEmpty()) {
             System.out.println("Belum ada transaksi.");
         } else {
-            System.out.printf("%-4s | %-10s | %-12s | %-8s | %-12s | %-10s%n", "ID", "Kasir", "Total Bayar", "Jumlah","Status",  "Tanggal");
-            System.out.println("----+------------+--------------+----------+--------------+-----------");
-                for (int i = 0; i < daftarTransaksi.size(); i++) {
-                cTransaksi t = daftarTransaksi.get(i);
-                System.out.printf("%-4d | %-10s | Rp%-11.0f | %-8d | %-12s | %-10s%n", t.getIdTransaksi(), t.getPesanan().getKasir().getNama(), t.getTotalSetelahDiskon(), t.getPesanan().getItems().size(), t.getStatusPembayaran(),  t.getTanggalTransaksi());
-                }
+            System.out.printf("%-4s | %-10s | %-12s | %-12s | %-8s | %-12s | %-10s%n", "ID", "Kasir", "Pelanggan", "Total Bayar", "Jumlah","Status",  "Tanggal");
+            System.out.println("----+------------+--------------+--------------+----------+--------------+-----------");
+            for (cTransaksi t : daftarTransaksi) {
+                System.out.printf("%-4d | %-10s | %-12s | Rp%-11.0f | %-8d | %-12s | %-10s%n", t.getIdTransaksi(), t.getPesanan().getKasir().getNama(), t.getPesanan().getPembeli().getNama(), t.getTotalSetelahDiskon(), t.getPesanan().getItems().size(), t.getStatusPembayaran(),  t.getTanggalTransaksi());
+            }
         }
-        
     }
     // toString
     public String toString() {
